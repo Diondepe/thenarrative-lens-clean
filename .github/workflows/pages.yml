@@ -2,9 +2,8 @@ name: Build and Deploy site to GitHub Pages
 
 on:
   push:
-    branches:
-      - main  # deploy when pushing to main
-  workflow_dispatch: # allow manual trigger
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -35,24 +34,47 @@ jobs:
         run: |
           npm install -g clean-css-cli terser html-minifier-terser
 
+      - name: Prepare build dir
+        run: |
+          rm -rf build
+          mkdir -p build/css build/js
+
       - name: Minify CSS
         run: |
-          mkdir -p build/css
           cleancss -o build/css/styles.css css/styles.css
 
       - name: Minify JS
         run: |
-          mkdir -p build/js
           terser js/app.js -c -m -o build/js/app.js
           terser js/layout.js -c -m -o build/js/layout.js
 
-      - name: Copy static files
+      - name: Copy static files (exclude git/workflow/build/css/js)
         run: |
-          rsync -av --exclude='css/' --exclude='js/' ./ build/
-          cp -r assets build/assets
-          cp -r data build/data
-          cp -r partials build/partials
-          cp -r .well-known build/.well-known
+          rsync -av \
+            --exclude '.git*' \
+            --exclude '.github' \
+            --exclude 'node_modules' \
+            --exclude 'build' \
+            --exclude 'css' \
+            --exclude 'js' \
+            ./ build/
+
+          # Copy optional directories only if they exist (prevents errors)
+          [ -d ".well-known" ] && rsync -av .well-known/ build/.well-known/ || true
+          [ -d "assets" ] && rsync -av assets/ build/assets/ || true
+          [ -d "data" ] && rsync -av data/ build/data/ || true
+          [ -d "partials" ] && rsync -av partials/ build/partials/ || true
+
+      # OPTIONAL: Minify HTML files after copy (keeps repo HTML readable)
+      - name: Minify HTML
+        run: |
+          find build -type f -name "*.html" -print0 | xargs -0 -I{} sh -c \
+            'html-minifier-terser \
+              --collapse-whitespace \
+              --remove-comments \
+              --minify-css true \
+              --minify-js true \
+              -o "{}" "{}"'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
