@@ -3,18 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Narrative News — The Narrative Lens</title>
-  <link rel="icon" type="image/png" href="assets/favicon-redesigned.png" />
+  <title>The Narrative Lens — Narrative News</title>
+
+  <link rel="icon" type="image/png" href="assets/favicon-32x32.png" />
+
+  <meta property="og:title" content="Narrative News — The Narrative Lens" />
+  <meta property="og:description" content="Daily feed of stories classified into narratives." />
+  <meta property="og:image" content="assets/og-image.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://thenarrativelens.com/feeds.html" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Narrative News — The Narrative Lens" />
+  <meta name="twitter:description" content="Daily feed of stories classified into narratives." />
+  <meta name="twitter:image" content="assets/og-image.png" />
+
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body data-page="feeds">
   <div id="site-header"></div>
 
   <main class="container pad-main">
-    <div class="content-narrow">
-      <h1>Narrative News</h1>
-      <div id="feeds-list" aria-live="polite"></div>
-    </div>
+    <h1>Narrative News</h1>
+    <div id="feeds-list" class="feed-list"></div>
   </main>
 
   <div id="site-footer"></div>
