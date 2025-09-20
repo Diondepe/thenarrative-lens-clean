@@ -1,4 +1,4 @@
-name: Deploy site to GitHub Pages
+name: Build and Deploy site to GitHub Pages
 
 on:
   push:
@@ -16,22 +16,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install minifiers
+        run: |
+          npm install -g clean-css-cli terser html-minifier-terser
+
+      - name: Minify CSS
+        run: |
+          mkdir -p build/css
+          cleancss -o build/css/styles.css css/styles.css
+
+      - name: Minify JS
+        run: |
+          mkdir -p build/js
+          terser js/app.js -c -m -o build/js/app.js
+          terser js/layout.js -c -m -o build/js/layout.js
+
+      - name: Copy static files
+        run: |
+          rsync -av --exclude='css/' --exclude='js/' ./ build/
+          cp -r assets build/assets
+          cp -r data build/data
+          cp -r partials build/partials
+          cp -r .well-known build/.well-known
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .  # deploy entire repo root (index.html, css/, js/, etc.)
+          path: build
 
       - name: Deploy to GitHub Pages
         id: deployment
