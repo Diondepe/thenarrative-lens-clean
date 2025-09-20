@@ -4,10 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>The Narrative Lens — Home</title>
-  <link rel="icon" type="image/png" href="assets/favicon-redesigned.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon-32x32.png" />
+
+  <!-- Open Graph / Twitter (uses your new og-image.png) -->
+  <meta property="og:title" content="The Narrative Lens" />
+  <meta property="og:description" content="Explore contentious narratives, timelines, and daily news framing." />
+  <meta property="og:image" content="assets/og-image.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://thenarrativelens.com" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Narrative Lens" />
+  <meta name="twitter:description" content="Explore contentious narratives, timelines, and daily news framing." />
+  <meta name="twitter:image" content="assets/og-image.png" />
+
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body data-page="home">
+  <!-- Header injected by layout.js -->
   <div id="site-header"></div>
 
   <main class="container pad-main">
@@ -21,7 +37,9 @@
     <div id="home-feeds" class="teaser-grid"></div>
   </main>
 
+  <!-- Footer injected by layout.js -->
   <div id="site-footer"></div>
+
   <script src="js/app.js" defer></script>
   <script src="js/layout.js" defer></script>
 </body>
